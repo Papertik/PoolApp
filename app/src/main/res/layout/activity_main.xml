@@ -7,10 +7,12 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/title"
         android:layout_width="408dp"
         android:layout_height="64dp"
-        android:text="Pagosa Hot Springs"
+        android:background="#E8E8E8"
+        android:gravity="center"
+        android:text="Home"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,7 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/title"
         app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
@@ -36,18 +38,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/Pool_1"
                 style="@style/Widget.AppCompat.Button"
                 android:layout_width="match_parent"
                 android:layout_height="133dp"
-                android:background="#D59D99"
-                android:backgroundTint="#E6B1C4"
+                android:background="#85CCEC"
                 android:gravity="left|center_vertical"
-                android:text="POOL 1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                android:textColorHighlight="#000000"
-                app:strokeColor="#009688" />
+                android:text="@string/button_text_template"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -58,7 +58,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" >
+        app:layout_constraintTop_toBottomOf="@+id/nestedScrollView"
+        app:layout_constraintVertical_bias="1.0">
 
         <ImageButton
             android:id="@+id/homebutton"

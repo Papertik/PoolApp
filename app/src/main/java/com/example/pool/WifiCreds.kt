@@ -3,21 +3,21 @@ package com.example.pool
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageButton
 
-class Settings : AppCompatActivity() {
+class WifiCreds : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        setContentView(R.layout.activity_wifi_creds)
         val imagebuttonClick = findViewById<ImageButton>(R.id.homebutton)
         imagebuttonClick.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)}
-
-        val buttonClick = findViewById<Button>(R.id.wifi)
-        buttonClick.setOnClickListener {
-            val intent = Intent(this, WifiCreds::class.java)
-            startActivity(intent)}
+            startActivity(intent)
+        }
+        val imagebutton1Click = findViewById<ImageButton>(R.id.settings_button)
+        imagebutton1Click.setOnClickListener {
+            val intent = Intent(this, Settings::class.java)
+            startActivity(intent)
+        }
     }
 }

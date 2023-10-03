@@ -19,7 +19,7 @@ import java.io.InputStreamReader
 
 
 class Pool1 : AppCompatActivity() {
-
+// function to fetch from thingspeak
     private fun fetchDataFromThingSpeak(): String {
         return runBlocking {
             withContext(Dispatchers.IO) {
