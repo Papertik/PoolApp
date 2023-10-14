@@ -11,7 +11,7 @@ class WifiCreds : AppCompatActivity() {
         setContentView(R.layout.activity_wifi_creds)
         val imagebuttonClick = findViewById<ImageButton>(R.id.homebutton)
         imagebuttonClick.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, HomeScreen::class.java)
             startActivity(intent)
         }
         val imagebutton1Click = findViewById<ImageButton>(R.id.settings_button)

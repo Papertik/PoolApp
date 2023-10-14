@@ -38,29 +38,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <EditText
-            android:id="@+id/editTextText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:text="" />
-
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/wifi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="WIFI"
+            android:text="WI-FI Settings"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/PasswordChange"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Change Password"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="396dp"
-        android:layout_height="82dp"
+        android:layout_width="420dp"
+        android:layout_height="84dp"
         android:layout_marginBottom="20dp"
         android:gravity="center"
         android:text="SETTINGS"
+        android:background="#BEF6FD"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
