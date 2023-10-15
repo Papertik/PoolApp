@@ -12,7 +12,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-
 rootProject.name = "Pool"
 include(":app")
  
