@@ -29,9 +29,15 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 
 class WifiCreds : AppCompatActivity() {
-    var m_bluetoothAdapter:BluetoothAdapter? = null
-    lateinit var m_pairedDevices: Set<BluetoothDevice>
-    val REQUEST_ENABLE_BLUETOOTH = 1
+    private var m_bluetoothAdapter:BluetoothAdapter? = null
+    private lateinit var m_pairedDevices: Set<BluetoothDevice>
+    private val REQUEST_ENABLE_BLUETOOTH = 1
+
+    companion object{
+        val EXTRA_ADRESS: String = "Device_adress"
+        var PASS: String? = null
+        var SSID: String? = null
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wifi_creds)
@@ -58,13 +64,13 @@ class WifiCreds : AppCompatActivity() {
                 var ssidET = findViewById(R.id.ssid) as EditText
                 var passET = findViewById(R.id.pass) as EditText
 
-                var newSSID = ssidET.getText().toString()
-                var newPass = passET.getText().toString()
+                SSID = ssidET.getText().toString()
+                PASS = passET.getText().toString()
                 CoroutineScope(Dispatchers.IO).launch {
-                    pushToThingspeak(newSSID, newPass)
+                    pushToThingspeak(SSID!!, PASS!!)
                 }
-                println(newSSID)
-                println(newPass)
+                println(SSID)
+                println(PASS)
             }
         }
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -95,16 +101,7 @@ class WifiCreds : AppCompatActivity() {
         val select_device_refresh = findViewById<Button>(R.id.select_device_refresh)
         select_device_refresh.setOnClickListener{pairedDeviceList()}
 
-        val blueButton = findViewById<Button>(R.id.blueBut)
-        blueButton.setOnClickListener{
 
-            var data:StringBuffer = StringBuffer()
-
-            if(data.isEmpty()){
-                Toast.makeText(applicationContext, "No devices paired", Toast.LENGTH_LONG).show()
-            }
-
-        }
 
     }
     fun pairedDeviceList(){
@@ -137,6 +134,14 @@ class WifiCreds : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
         val select_device_list = findViewById<ListView>(R.id.bluetoothList)
         select_device_list.adapter = adapter
+        select_device_list.onItemClickListener = AdapterView.OnItemClickListener{ _, _, position, _ ->
+            val device: BluetoothDevice = list[position]
+            val adress: String = device.address
+
+            val intent = Intent(this, ControlActivity::class.java)
+            intent.putExtra(EXTRA_ADRESS, adress)
+            startActivity(intent)
+        }
 
     }
 
