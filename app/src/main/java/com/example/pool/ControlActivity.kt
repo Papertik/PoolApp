@@ -87,6 +87,20 @@ class ControlActivity: AppCompatActivity(){
                     val device: BluetoothDevice = m_bluetoothAdapter.getRemoteDevice(m_adress)
 
 
+                    if (ActivityCompat.checkSelfPermission(
+                            this.context,
+                            Manifest.permission.BLUETOOTH_CONNECT
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return null
+                    }
                     m_bluetoothSocket = device.createRfcommSocketToServiceRecord(m_myUUID)
                     BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
                     m_bluetoothSocket!!.connect()
