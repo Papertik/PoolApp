@@ -43,7 +43,7 @@
             android:exported="false" />
         <activity
             android:screenOrientation="portrait"
-            android:name=".ControlActivity"
+            android:name=".DeviceConnectionActivity"
             android:exported="false" />
         <activity
             android:screenOrientation="portrait"

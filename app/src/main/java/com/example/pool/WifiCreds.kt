@@ -81,10 +81,17 @@ class WifiCreds : AppCompatActivity() {
         var scanning = false
         val handler = Handler()
         var devicesList = mutableListOf<ScanResult>()
-        val SCAN_PERIOD: Long = 10000
+        val SCAN_PERIOD: Long = 1000
         val bluetoothList: ListView =
             findViewById(R.id.bluetoothList) // Replace with your ListView ID
+        bluetoothList.setOnItemClickListener { parent, view, position, id ->
+            val selectedDevice = devicesList[position]
 
+            // Start the DeviceConnectionActivity and pass the selected device
+            val intent = Intent(this, DeviceConnectionActivity::class.java)
+            intent.putExtra("selectedDevice", selectedDevice.device)
+            startActivity(intent)
+        }
         // Adapter to manage the data for the ListView
         val adapter: ArrayAdapter<String> by lazy {
             ArrayAdapter(
@@ -95,9 +102,18 @@ class WifiCreds : AppCompatActivity() {
 
         fun updateListView() {
             // Update the adapter data
-            adapter.clear()
+            val uniqueDevices = HashSet<BluetoothDevice>()
+
+            // Filter out duplicate devices
             devicesList.forEach { scanResult ->
-                val deviceName = scanResult.device.name ?: "Unknown Device"
+                val device = scanResult.device
+                uniqueDevices.add(device)
+            }
+
+            // Update the adapter with the unique devices
+            adapter.clear()
+            uniqueDevices.forEach { uniqueDevice ->
+                val deviceName = uniqueDevice.name ?: "Unknown Device"
                 adapter.add(deviceName)
             }
 
