@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Pool</string>
     <string name="button_text_template">Pool 1:         %s °F</string>
-    <string name="Password">PASSWORD</string>
+    <string name="Password"></string>
 </resources>

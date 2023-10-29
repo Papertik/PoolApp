@@ -21,7 +21,7 @@ import android.widget.Toast
 
 class ControlActivity: AppCompatActivity(){
     companion object{
-        var m_myUUID: UUID = UUID.fromString("ffa557f0-6bb6-11ee-807c-0800200c9a66")
+        var m_myUUID: UUID = UUID.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E")
         var m_bluetoothSocket: BluetoothSocket? = null
         lateinit var m_progress: ProgressDialog
         lateinit var m_bluetoothAdapter: BluetoothAdapter
@@ -101,7 +101,9 @@ class ControlActivity: AppCompatActivity(){
                         // for ActivityCompat#requestPermissions for more details.
                         return null
                     }
+
                     m_bluetoothSocket = device.createRfcommSocketToServiceRecord(m_myUUID)
+
                     BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
                     m_bluetoothSocket!!.connect()
 

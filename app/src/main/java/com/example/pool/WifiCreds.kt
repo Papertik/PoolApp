@@ -5,12 +5,15 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
 import android.companion.AssociationRequest
 import android.companion.BluetoothDeviceFilter
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -29,9 +32,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 
 class WifiCreds : AppCompatActivity() {
-    private var m_bluetoothAdapter:BluetoothAdapter? = null
-    private lateinit var m_pairedDevices: Set<BluetoothDevice>
-    private val REQUEST_ENABLE_BLUETOOTH = 1
+
 
     companion object{
         val EXTRA_ADRESS: String = "Device_adress"
@@ -39,12 +40,14 @@ class WifiCreds : AppCompatActivity() {
         var SSID: String? = null
     }
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wifi_creds)
 
-
-
-
+        var bt: BluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        var m_bluetoothAdapter:BluetoothAdapter = bt.adapter
+        lateinit var m_pairedDevices: Set<BluetoothDevice>
+        val REQUEST_ENABLE_BLUETOOTH = 1
 
         val imagebuttonClick = findViewById<ImageButton>(R.id.homebutton)
         imagebuttonClick.setOnClickListener {
@@ -73,89 +76,90 @@ class WifiCreds : AppCompatActivity() {
                 println(PASS)
             }
         }
-        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
 
-        m_bluetoothAdapter = bluetoothManager.adapter
-        if(m_bluetoothAdapter == null){
-            Toast.makeText(applicationContext, "This device does not support bluetooth", Toast.LENGTH_LONG).show()
-            return
-        }
-        if(!m_bluetoothAdapter!!.isEnabled){
-            val enableBluetoothIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.BLUETOOTH_CONNECT
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return
-            }
-            startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BLUETOOTH)
-        }
-        val select_device_refresh = findViewById<Button>(R.id.select_device_refresh)
-        select_device_refresh.setOnClickListener{pairedDeviceList()}
+        val bluetoothLeScanner = m_bluetoothAdapter.bluetoothLeScanner
+        var scanning = false
+        val handler = Handler()
+        var devicesList = mutableListOf<ScanResult>()
+        val SCAN_PERIOD: Long = 10000
+        val bluetoothList: ListView =
+            findViewById(R.id.bluetoothList) // Replace with your ListView ID
 
-
-
-    }
-    fun pairedDeviceList(){
-        if (ActivityCompat.checkSelfPermission(
+        // Adapter to manage the data for the ListView
+        val adapter: ArrayAdapter<String> by lazy {
+            ArrayAdapter(
                 this,
-                Manifest.permission.BLUETOOTH_CONNECT
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
+                android.R.layout.simple_list_item_1,
+                devicesList.map { it.device.name ?: "Unknown Device" })
         }
-        m_pairedDevices = m_bluetoothAdapter!!.bondedDevices
-        val list : ArrayList<BluetoothDevice> = ArrayList()
 
-        if(!m_pairedDevices.isEmpty()){
-            Toast.makeText(applicationContext, "Refreshed", Toast.LENGTH_SHORT).show()
-            for(device:BluetoothDevice in m_pairedDevices){
-                list.add(device)
-                Log.i("device", ""+device)
+        fun updateListView() {
+            // Update the adapter data
+            adapter.clear()
+            devicesList.forEach { scanResult ->
+                val deviceName = scanResult.device.name ?: "Unknown Device"
+                adapter.add(deviceName)
             }
-        }else{
-            Toast.makeText(applicationContext, "No bluetooth devices found", Toast.LENGTH_LONG).show()
-        }
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
-        val select_device_list = findViewById<ListView>(R.id.bluetoothList)
-        select_device_list.adapter = adapter
-        select_device_list.onItemClickListener = AdapterView.OnItemClickListener{ _, _, position, _ ->
-            val device: BluetoothDevice = list[position]
-            val adress: String = device.address
 
-            val intent = Intent(this, ControlActivity::class.java)
-            intent.putExtra(EXTRA_ADRESS, adress)
-            startActivity(intent)
+            // Notify the adapter that the data has changed
+            adapter.notifyDataSetChanged()
+
+            // Set the adapter to the ListView
+            bluetoothList.adapter = adapter
         }
 
+        val leScanCallback: ScanCallback = object : ScanCallback() {
+            override fun onScanResult(callbackType: Int, result: ScanResult) {
+                // Called when a new BLE device is discovered
+                val device = result.device
+                val rssi = result.rssi
+                // Add the discovered device to your list
+                devicesList.add(result)
+                // Update your ListView with the devices
+                updateListView()
+            }
+        }
+
+        fun scanLeDevice() {
+            if (!scanning) {
+                handler.postDelayed({
+                    scanning = false
+                    if (ActivityCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.BLUETOOTH_SCAN
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+
+                    } else {
+                        if (leScanCallback != null) {
+                            bluetoothLeScanner.stopScan(leScanCallback!!)
+                        }
+
+                    }
+
+                }, SCAN_PERIOD)
+                scanning = true
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.BLUETOOTH_SCAN
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+
+                } else {
+                    bluetoothLeScanner.startScan(leScanCallback)
+                }
+            } else {
+                scanning = false
+                bluetoothLeScanner.stopScan(leScanCallback!!)
+            }
+        }
+        val blueButton = findViewById<Button>(R.id.select_device_refresh)
+        blueButton.setOnClickListener {
+            scanLeDevice()
+        }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == REQUEST_ENABLE_BLUETOOTH && resultCode == Activity.RESULT_OK){
-            if(m_bluetoothAdapter!!.isEnabled){
-                Toast.makeText(applicationContext, "Bluetooth enabeled", Toast.LENGTH_SHORT).show()
-            }
-            else{
-                Toast.makeText(applicationContext, "Bluetooth disabeled", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
+
     suspend fun pushToThingspeak(SSID: String, PASS: String){
         val thingspeak = HttpClient()
 
