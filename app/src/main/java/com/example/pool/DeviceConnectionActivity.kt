@@ -37,7 +37,7 @@ class DeviceConnectionActivity : Activity() {
         // Establish a connection with the selected device
         connectToDevice(selectedDevice)
 
-    }
+    } 
 
     private fun connectToDevice(device: BluetoothDevice) {
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
