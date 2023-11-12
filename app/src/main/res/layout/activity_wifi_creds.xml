@@ -7,6 +7,18 @@
     tools:context=".WifiCreds">
 
 
+    <TextView
+        android:id="@+id/log_in2"
+        android:layout_width="0dp"
+        android:layout_height="65dp"
+        android:background="#BEF6FD"
+        android:gravity="center"
+        android:text="WIFI Credentials:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/espBut"
         android:layout_width="wrap_content"
@@ -107,7 +119,7 @@
 
     <ListView
         android:id="@+id/bluetoothList"
-        android:layout_width="410dp"
+        android:layout_width="0dp"
         android:layout_height="204dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"

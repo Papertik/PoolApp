@@ -11,9 +11,12 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Looper
 import android.util.Log
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -23,6 +26,13 @@ import java.util.UUID
 class DeviceConnectionActivity : Activity() {
     private var bluetoothGatt: BluetoothGatt? = null
     private lateinit var selectedDevice: BluetoothDevice
+    private lateinit var pass: String
+    private lateinit var ssid: String
+
+    private lateinit var deviceView: TextView
+    private lateinit var passView: TextView
+    private lateinit var ssidView: TextView
+
     private val context: Context
         get() {
             return(this);
@@ -32,7 +42,45 @@ class DeviceConnectionActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device_connection)
 
+        val imagebuttonClick = findViewById<ImageButton>(R.id.homebutton)
+        imagebuttonClick.setOnClickListener {
+            val intent = Intent(this, HomeScreen::class.java)
+            startActivity(intent)
+        }
+        val imagebutton1Click = findViewById<ImageButton>(R.id.settings_button)
+        imagebutton1Click.setOnClickListener {
+            val intent = Intent(this, Settings::class.java)
+            startActivity(intent)
+        }
+
         selectedDevice = intent.getParcelableExtra("selectedDevice")!!
+        pass = intent.getStringExtra("pass")!!
+        ssid = intent.getStringExtra("ssid")!!
+
+
+        deviceView = findViewById<TextView>(R.id.devicenameView)
+        passView = findViewById<TextView>(R.id.passwordView)
+        ssidView = findViewById<TextView>(R.id.ssidView)
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        deviceView.setText(selectedDevice.name)
+        passView.setText(pass)
+        ssidView.setText(ssid)
+
+
 
         // Establish a connection with the selected device
         connectToDevice(selectedDevice)
@@ -102,8 +150,10 @@ class DeviceConnectionActivity : Activity() {
                 val characteristic = service?.getCharacteristic(CHARACTERISTIC_UUID)
 
                 // Write your string as bytes to the characteristic
-                val dataToSend = "Your String Data"
+
+                val dataToSend = pass + "," + ssid
                 val dataBytes = dataToSend.toByteArray(Charset.forName("UTF-8"))
+                Log.d(TAG,dataToSend)
                 characteristic?.value = dataBytes
                 if (ActivityCompat.checkSelfPermission(
                         context,

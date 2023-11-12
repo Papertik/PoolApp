@@ -12,7 +12,7 @@ class Settings : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         val imagebuttonClick = findViewById<ImageButton>(R.id.homebutton)
         imagebuttonClick.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, HomeScreen::class.java)
             startActivity(intent)}
 // button to go to WIFI settings
         val buttonClick = findViewById<Button>(R.id.wifi)

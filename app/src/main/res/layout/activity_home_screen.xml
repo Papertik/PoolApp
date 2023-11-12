@@ -8,22 +8,22 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="408dp"
-        android:layout_height="64dp"
-        android:background="#E8E8E8"
+        android:layout_width="0dp"
+        android:layout_height="65dp"
+        android:background="#BEF6FD"
         android:gravity="center"
         android:text="Home"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.357"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
-        android:layout_width="405dp"
+        android:layout_width="0dp"
         android:layout_height="591dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -43,7 +43,7 @@
                 style="@style/Widget.AppCompat.Button"
                 android:layout_width="match_parent"
                 android:layout_height="133dp"
-                android:background="#85CCEC"
+                android:background="#9DA7DC"
                 android:gravity="left|center_vertical"
                 android:text="@string/button_text_template"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
@@ -52,7 +52,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="74dp"
         android:layout_marginTop="1dp"
         app:layout_constraintBottom_toBottomOf="parent"

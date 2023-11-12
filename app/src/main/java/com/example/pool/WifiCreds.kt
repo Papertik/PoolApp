@@ -9,6 +9,7 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.companion.AssociationRequest
 import android.companion.BluetoothDeviceFilter
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -90,6 +91,17 @@ class WifiCreds : AppCompatActivity() {
             // Start the DeviceConnectionActivity and pass the selected device
             val intent = Intent(this, DeviceConnectionActivity::class.java)
             intent.putExtra("selectedDevice", selectedDevice.device)
+
+            var ssidET = findViewById(R.id.ssid) as EditText
+            var passET = findViewById(R.id.pass) as EditText
+
+            SSID = ssidET.getText().toString()
+            PASS = passET.getText().toString()
+
+            Log.d(TAG, PASS + SSID)
+            intent.putExtra("pass", PASS)
+            intent.putExtra("ssid", SSID)
+
             startActivity(intent)
         }
         // Adapter to manage the data for the ListView
